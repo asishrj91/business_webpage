@@ -3,3 +3,9 @@ node_modules/
 out/
 *.tsbuildinfo
 .env*
+
+dist/
+.wrangler/
+.vinext/
+.sites-runtime/
+.dev.vars

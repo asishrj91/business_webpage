@@ -1,0 +1,3 @@
+import { runtime } from '../../../../lib/server-content';
+export const dynamic='force-dynamic';
+export async function GET(_request:Request,{params}:{params:Promise<{key:string}>}){const {key}=await params;if(!/^[a-f0-9-]+\.(jpg|png|webp)$/.test(key))return new Response('Not found',{status:404});const object=await runtime().BUCKET.get(key);if(!object)return new Response('Not found',{status:404});return new Response(object.body,{headers:{'Content-Type':object.httpMetadata?.contentType||'application/octet-stream','X-Content-Type-Options':'nosniff','Cache-Control':'public, max-age=31536000, immutable'}});}

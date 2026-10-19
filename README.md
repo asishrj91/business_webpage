@@ -1,22 +1,25 @@
 # Sprouts & Shoots by Thanal
 
-Responsive Next.js, TypeScript and Tailwind website with a sample catalogue, basket and WhatsApp enquiry flow.
+Visit /admin and sign in with the ChatGPT account that owns this Site.
 
-## Run locally
+## Managing content
+- Select a product to edit its name, photo, price, pack size, flavour and description.
+- Add products; new products start Hidden / draft. Available products can be ordered; Sold out products remain visible but cannot be added to the basket.
+- Upload JPG, PNG or WebP photos up to 5 MB.
+- Business settings controls the display name, announcement, WhatsApp number, delivery area and sample-menu label.
+- Click Save changes to publish. Unsaved changes remain only in the current editor. Stale saves are rejected to avoid overwriting newer edits.
+- Subscription-plan editing is outside this first admin release. The existing sample plan remains unchanged.
 
-```sh
-npm install
-npm run dev
-```
+## Architecture
+Next-compatible UI on Vinext / Cloudflare Workers through Sites. D1 stores products, settings and owner identity; R2 stores uploaded photos. No Supabase account is needed. Site access stays private. Every admin endpoint also authorizes on the server.
 
-`npm run build` exports the website to `out/` for static hosting.
+ADMIN_EMAIL is a hosted server-side secret used only to enroll the configured owner using verified Sites identity headers. Subsequent checks use the durable site-scoped user ID in admin_owner. Never expose it in client code or allow arbitrary first-visitor enrollment.
 
-## Before launch
+The initial catalogue is sample data until first saved. Local preview data is separate from production.
 
-- In `lib/catalogue.ts`, set `business.whatsapp` to the real business number in international digits-only format (for example, country code followed by the number). The current display number is deliberately invalid; the WhatsApp action is disabled until configured.
-- Confirm varieties, prices, pack sizes and subscription terms. Current values are illustrative, as requested.
-- Prices are in `app/page.tsx`; the product definitions are in `lib/catalogue.ts`.
-- The logo is the supplied `public/brand.png`. The hero uses an illustrative Unsplash gardening image; product visuals are stylized illustrations.
-- Confirm delivery localities within Trivandrum and any charges before accepting orders.
+## Development
+Run npm ci, npm run build, then apply generated SQL migrations locally and npm run dev. Local mock sign-in uses an ignored .dev.vars with ADMIN_EMAIL set to seedy@sites.test; production uses Sites authentication.
 
-There is no payment processing or order database. Customers review their basket and send an enquiry; the business confirms terms on WhatsApp. Basket state lasts for the current page session.
+Checks: node --test tests/content.test.mjs and npx tsc --noEmit.
+
+Preserve the Site ID in .openai/hosting.json. Commit generated drizzle migrations and do not edit applied migrations. Never upload .dev.vars, .wrangler or local database state.

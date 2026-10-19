@@ -1,6 +1,5 @@
 {
   "project_id": "appgprj_6ad5eb2f92688191a39e948db4c3477e",
-  "static": {
-    "directory": "out"
-  }
+  "d1": "DB",
+  "r2": "BUCKET"
 }
