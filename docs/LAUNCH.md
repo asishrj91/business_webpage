@@ -1,9 +1,9 @@
 # Test-mode setup and launch
 
-External accounts and runtime configuration are required before accepting orders. Keep test/live databases, keys and webhooks separate. The current Site audience remains private.
+External accounts and runtime configuration are required before accepting orders. Keep test/live databases, keys and webhooks separate. Register your own Site before deployment; this template contains no hosted project ID.
 
 ## Business configuration
-In /admin replace sample products/prices/photos and the placeholder WhatsApp number. Disable the sample-menu flag only after review. In /admin/operations set available (unreserved) stock, exact supported Trivandrum 695xxx postcodes, fee, minimum order, delivery weekdays, lead time and IST cutoff. Supply your support email, business address, shipping/refund/privacy/terms policies and a policy version. Checkout requires this configuration and customer acceptance. Verify applicable business, food labelling, tax and invoicing obligations separately; an order receipt is not a tax invoice.
+In /admin replace sample products/prices/photos and the placeholder WhatsApp number. Disable the sample-menu flag only after review. In /admin/operations set available (unreserved) stock, exact supported six-digit Indian PIN codes, fee, minimum order, delivery weekdays, lead time and IST cutoff. Supply your support email, business address, shipping/refund/privacy/terms policies and a policy version. Checkout requires this configuration and customer acceptance. Verify applicable business, food labelling, tax and invoicing obligations separately; an order receipt is not a tax invoice.
 
 ## Razorpay test mode
 Create a merchant account and test-mode keys. Set these server-side runtime secrets through Sites environment settings; never commit secrets or embed them in frontend code:
@@ -23,10 +23,10 @@ Generate secrets with a password manager. Configure automatic capture in Razorpa
 Official references: [Standard Checkout](https://razorpay.com/docs/payments/payment-gateway/web-integration/standard/integration-steps/) and [webhooks](https://razorpay.com/docs/webhooks/).
 
 ## Email
-Create a Resend account, verify your sending domain and DNS, then set RESEND_API_KEY and EMAIL_FROM (e.g. Sprouts & Shoots <orders@YOUR_DOMAIN>). Keep test environments from emailing real customers. Missing credentials leave notifications pending. See [domain setup](https://resend.com/docs/dashboard/domains/introduction).
+Create a Resend account, verify your sending domain and DNS, then set RESEND_API_KEY and EMAIL_FROM (e.g. Leaf & Larder <orders@YOUR_DOMAIN>). Keep test environments from emailing real customers. Missing credentials leave notifications pending. See [domain setup](https://resend.com/docs/dashboard/domains/introduction).
 
 ## Deployment and scheduling
-Deploy source and migrations through Sites. Pushing GitHub alone does not deploy the Site. Verify /api/health and owner login.
+Register a new Site, add its returned project_id to .openai/hosting.json, then deploy source and migrations through Sites. Pushing GitHub alone does not deploy the Site. Verify /api/health and owner login.
 
 The maintenance workflow is opt-in: set GitHub Actions variables MAINTENANCE_ENABLED=true and SITE_URL, plus Actions secret MAINTENANCE_SECRET matching the runtime secret. It checks health and POSTs /api/maintenance every 10 minutes. Enable only when the origin is reachable by GitHub. For private hosting use the dashboard manual maintenance button until an authenticated scheduler is configured. GitHub schedules can be delayed; use a monitored scheduler for dependable timing. Configure failed-run notifications and uptime alerts. Neither provider accounts nor backup schedules are provisioned by this code.
 

@@ -2,7 +2,7 @@ export type Product = { id: string; name: string; kind: string; category: 'Mild'
 export type Settings = { name: string; whatsapp: string; deliveryArea: string; tagline: string; sampleMenu: boolean };
 export type Content = { products: Product[]; settings: Settings };
 export const defaults: Content = {
- settings: { name: 'Sprouts & Shoots by Thanal', whatsapp: '', deliveryArea: 'Trivandrum', tagline: 'A little green. A little goodness. Every day.', sampleMenu: true },
+ settings: { name: 'Leaf & Larder', whatsapp: '', deliveryArea: 'Your city', tagline: 'A little green. A little goodness. Every day.', sampleMenu: true },
  products: [
   { id:'sunflower', name:'Sunflower shoots', kind:'Mild & crunchy', category:'Mild', description:'A little crunch for sandwiches, salads and your everyday bowl.', price:120, packSize:'50 g', image:'', status:'available' },
   { id:'radish', name:'Radish microgreens', kind:'Peppery & bright', category:'Peppery', description:'A peppery finishing touch for toast, chaat and fresh salads.', price:100, packSize:'50 g', image:'', status:'available' },
