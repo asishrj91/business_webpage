@@ -1,7 +1,7 @@
 import { env } from 'cloudflare:workers';
 import { headers } from 'next/headers';
 import { defaults, type Content } from './content';
-export const runtime = () => env as unknown as { DB:D1Database; BUCKET:R2Bucket; ADMIN_EMAIL?:string };
+export const runtime = () => env as unknown as { DB:D1Database; BUCKET:R2Bucket; ADMIN_EMAIL?:string; RAZORPAY_KEY_ID?:string; RAZORPAY_KEY_SECRET?:string; RAZORPAY_WEBHOOK_SECRET?:string; ORDER_TOKEN_SECRET?:string; RESEND_API_KEY?:string; EMAIL_FROM?:string; SITE_URL?:string; MAINTENANCE_SECRET?:string; ALLOW_LIVE_PAYMENTS?:string };
 export async function readContent():Promise<{content:Content;revision:number}> {
  const row=await runtime().DB.prepare('SELECT data, revision FROM site_content WHERE id = ?').bind('catalogue').first<{data:string;revision:number}>();
  return row?{content:JSON.parse(row.data),revision:row.revision}:{content:defaults,revision:0};

@@ -1,0 +1,3 @@
+import { authorizedOrder,orderById,publicOrder,rateLimit } from '../../../../lib/commerce';
+export const dynamic='force-dynamic';
+export async function GET(request:Request,{params}:{params:Promise<{id:string}>}){const {id}=await params;if(!await authorizedOrder(request,id))return Response.json({error:'Invalid order access link.'},{status:403});try{await rateLimit(request,'tracking',240);const order=await orderById(id);if(!order)return Response.json({error:'Order not found.'},{status:404});return Response.json(await publicOrder(order),{headers:{'Cache-Control':'no-store','Referrer-Policy':'no-referrer'}});}catch{return Response.json({error:'Please try again later.'},{status:429});}}

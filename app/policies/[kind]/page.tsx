@@ -1,0 +1,5 @@
+import { notFound } from 'next/navigation';
+import { settings } from '../../../lib/commerce';
+import '../../commerce.css';
+export const dynamic='force-dynamic';
+export default async function Policy({params}:{params:Promise<{kind:string}>}){const {kind}=await params;const names:Record<string,string>={shipping:'Shipping & delivery',refunds:'Cancellations & refunds',privacy:'Privacy policy',terms:'Terms of purchase'};if(!names[kind])notFound();const {delivery}=await settings();const value=({shipping:delivery.shippingPolicy,refunds:delivery.refundPolicy,privacy:delivery.privacyPolicy,terms:delivery.terms})[kind];return <main className="commerce-page"><a className="back-link" href="/">← Back to the store</a><h1>{names[kind]}</h1><section className="commerce-card policy-copy"><p>{value||'This policy has not been published yet. Online checkout remains unavailable until the business has completed its policies.'}</p><hr/><p>{delivery.businessAddress}</p>{delivery.supportEmail&&<a href={`mailto:${delivery.supportEmail}`}>{delivery.supportEmail}</a>}<small>Policy version: {delivery.policyVersion}</small></section></main>;}

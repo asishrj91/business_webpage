@@ -4,3 +4,5 @@
 @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}*{transition:none!important}}
 
 .uploaded-product-photo{width:100%;height:100%;object-fit:cover}.add-button:disabled{opacity:.5;cursor:not-allowed}.add-button:disabled span{display:none}
+
+.whatsapp-option{margin-top:12px}footer>div:not(.footer-bottom){flex-wrap:wrap}

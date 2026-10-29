@@ -8,6 +8,13 @@
       "when": 1792406320026,
       "tag": "0000_tiresome_medusa",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "6",
+      "when": 1793109574798,
+      "tag": "0001_faulty_golden_guardian",
+      "breakpoints": true
     }
   ]
 }

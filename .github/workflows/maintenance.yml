@@ -1,0 +1,24 @@
+name: Order maintenance
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '*/10 * * * *'
+permissions:
+  contents: read
+concurrency:
+  group: order-maintenance
+  cancel-in-progress: false
+jobs:
+  maintain:
+    if: vars.MAINTENANCE_ENABLED == 'true'
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+      - run: node scripts/maintenance.mjs
+        env:
+          SITE_URL: ${{ vars.SITE_URL }}
+          MAINTENANCE_SECRET: ${{ secrets.MAINTENANCE_SECRET }}

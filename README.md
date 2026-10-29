@@ -1,25 +1,26 @@
 # Sprouts & Shoots by Thanal
 
-Visit /admin and sign in with the ChatGPT account that owns this Site.
+React/TypeScript storefront and owner dashboard, built with Vinext on Cloudflare Workers, D1 (SQL) and R2 (photos), hosted through Sites.
 
-## Managing content
-- Select a product to edit its name, photo, price, pack size, flavour and description.
-- Add products; new products start Hidden / draft. Available products can be ordered; Sold out products remain visible but cannot be added to the basket.
-- Upload JPG, PNG or WebP photos up to 5 MB.
-- Business settings controls the display name, announcement, WhatsApp number, delivery area and sample-menu label.
-- Click Save changes to publish. Unsaved changes remain only in the current editor. Stale saves are rejected to avoid overwriting newer edits.
-- Subscription-plan editing is outside this first admin release. The existing sample plan remains unchanged.
+## Features
+- Product, photo, availability and business management at /admin.
+- Persistent basket, guest checkout, server-calculated prices and Trivandrum delivery postcode/date checks.
+- Razorpay checkout, signature verification, webhooks, stock reservations and reconciliation.
+- Private order tracking and owner operations at /admin/operations: orders, stock, delivery, policies, fulfilment and full refunds.
+- Resend transactional email outbox, audit log, migrations, tests, CI and opt-in maintenance scheduler.
 
-## Architecture
-Next-compatible UI on Vinext / Cloudflare Workers through Sites. D1 stores products, settings and owner identity; R2 stores uploaded photos. No Supabase account is needed. Site access stays private. Every admin endpoint also authorizes on the server.
+Payments start disabled; no merchant credentials are included. Subscription plans remain WhatsApp enquiries. Recurring billing, partial refunds and tax invoices are not implemented.
 
-ADMIN_EMAIL is a hosted server-side secret used only to enroll the configured owner using verified Sites identity headers. Subsequent checks use the durable site-scoped user ID in admin_owner. Never expose it in client code or allow arbitrary first-visitor enrollment.
+## Local development
+Use Node 24 (tests use built-in SQLite). Run npm ci, copy .dev.vars.example to .dev.vars, then npm run build. Apply local migrations:
 
-The initial catalogue is sample data until first saved. Local preview data is separate from production.
+```sh
+node --import ./scripts/sites-env.mjs ./node_modules/wrangler/bin/wrangler.js d1 migrations apply DB --local --config dist/server/wrangler.json --persist-to .wrangler/state
+npm run dev
+```
 
-## Development
-Run npm ci, npm run build, then apply generated SQL migrations locally and npm run dev. Local mock sign-in uses an ignored .dev.vars with ADMIN_EMAIL set to seedy@sites.test; production uses Sites authentication.
+Local data is separate from hosted data. Run npm test, npm run build and npm run typecheck for validation.
 
-Checks: node --test tests/content.test.mjs and npx tsc --noEmit.
+Read [launch setup](docs/LAUNCH.md) and [operations](docs/OPERATIONS.md). Preserve .openai/hosting.json identity/storage bindings. Commit generated migrations; never edit applied migrations or commit secrets/local database files.
 
-Preserve the Site ID in .openai/hosting.json. Commit generated drizzle migrations and do not edit applied migrations. Never upload .dev.vars, .wrangler or local database state.
+Owner authorization depends on trusted Sites identity headers. ADMIN_EMAIL enrolls the verified owner once; subsequent checks use the stored site user ID. Moving to generic hosting requires a replacement identity provider and a trusted header boundary.

@@ -1,0 +1,3 @@
+import { isAdmin,runtime } from '../../../../lib/server-content';
+export const dynamic='force-dynamic';
+export async function GET(request:Request){if(!await isAdmin())return Response.json({error:'Admin required.'},{status:403});const before=Number(new URL(request.url).searchParams.get('before')||Date.now()+1);const rows=await runtime().DB.prepare('SELECT * FROM orders WHERE created_at<? ORDER BY created_at DESC LIMIT 50').bind(before).all();const pending=await runtime().DB.prepare('SELECT COUNT(*) AS count FROM outbox WHERE sent_at IS NULL').first();return Response.json({orders:rows.results,pendingEmails:pending?.count||0,nextCursor:rows.results.length===50?rows.results.at(-1)?.created_at:null},{headers:{'Cache-Control':'no-store'}});}
